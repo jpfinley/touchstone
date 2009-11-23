@@ -1,5 +1,5 @@
 //Touchstone
-//jeff's comment
+//Jeff Kirsch and John Finley
 
 #define LED 13
 #define BUTTON 7
