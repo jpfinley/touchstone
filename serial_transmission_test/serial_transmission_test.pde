@@ -1,3 +1,5 @@
+//adding a comment
+
 #define BUTTON 7
 int buttonValue = 0;
 
