@@ -13,8 +13,12 @@ void setup(){
 }
 
 void loop(){
-  buttonValue = digitalRead(BUTTON);
+  buttonValue = digitalRead(BUTTON);    
+  transmitStatus();
+  readSerial();
+}
 
+void transmitStatus() {
   //Transmit the button's state
   if(buttonValue == HIGH){
     Serial.print(1);
@@ -23,8 +27,10 @@ void loop(){
   else{
     Serial.print(0);
     delay(10);
-  }    
+  }
+}
 
+void readSerial() {
   //Read the serial buffer, light up the LED
   if(Serial.available() > 0) {
     incomingByte = Serial.read();
@@ -38,4 +44,3 @@ void loop(){
     }
   }
 }
-
