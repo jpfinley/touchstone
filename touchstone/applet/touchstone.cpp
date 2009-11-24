@@ -3,6 +3,9 @@
 
 #define LED 13
 #define BUTTON 7
+#include "WProgram.h"
+void setup();
+void loop();
 int incomingByte = 0;
 int buttonValue = 0;
 
@@ -37,5 +40,18 @@ void loop(){
       digitalWrite(LED, LOW);
     }
   }
+}
+
+
+int main(void)
+{
+	init();
+
+	setup();
+    
+	for (;;)
+		loop();
+        
+	return 0;
 }
 
