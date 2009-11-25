@@ -7,10 +7,12 @@
  * Resistor effects sensitivity, experiment with values, 50K - 50M. Larger resistor values yield larger sensor values.
  * Receive pin is the sensor pin - try different amounts of foil/metal on this pin
  */
-
 #include "WProgram.h"
 void setup();
 void loop();
+void transmitStatus(int message);
+void readSerial();
+int incomingByte = 0;
 int redLED = 9;                 // LED connected to digital pin 13
 int blueLED = 10;                 // LED connected to digital pin 13
 int heat = 0;
@@ -33,34 +35,72 @@ void loop()
     long start = millis();
     long total2 =  cs_4_5.capSense(30);
 
-    Serial.print(heat);
+  /* Serial.print(heat);
     Serial.print(" ");
     Serial.print(cold);
     Serial.print("\t");                    // tab character for debug windown spacing
     Serial.print("\t");
-    Serial.println(total2);                  // print sensor output 2 */
+    Serial.println(total2);                 // print sensor output 2*/
 
 
    // delay(10);                             // arbitrary delay to limit data to serial port
     
     
     
-    if (total2 > 10) {
+    if (total2 > 100) {
+      Serial.print("D");
+      //transmitStatus(1);
       if (heat < 1023) {
       heat ++;
       cold --;
       }
     }
     else {
+      Serial.print("F");
+      //transmitStatus(0);
+      
       if (heat > 1) {
       heat --;
       cold ++;
       }
     }
     
-    analogWrite(redLED, (heat / 4));   // sets the LED on
-    analogWrite(blueLED, (cold / 4));   // sets the LED on
+    analogWrite(blueLED, cold / 4);
+    analogWrite(redLED, heat / 4);
     
+    
+    readSerial();
+    
+}
+
+
+
+void transmitStatus(int message) {
+  //Transmit the button's state
+    Serial.print(message);
+  
+}
+
+void readSerial() {
+ //Read the serial buffer, light up the LED
+  if(Serial.available() > 0) {
+    incomingByte = Serial.read();
+    Serial.println(incomingByte, DEC);
+
+    if(incomingByte == 49){ //49 is ASCII for the number one.
+      analogWrite(redLED, 1023);
+     /*if (heat < 1023) {
+      heat ++;
+      cold --;
+      }
+    }
+    else{
+      if (heat > 1) {
+      heat --;
+      cold ++;
+      }*/
+    }
+  }
 }
 
 int main(void)
