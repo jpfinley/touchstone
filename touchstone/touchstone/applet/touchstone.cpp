@@ -7,6 +7,11 @@
  * Resistor effects sensitivity, experiment with values, 50K - 50M. Larger resistor values yield larger sensor values.
  * Receive pin is the sensor pin - try different amounts of foil/metal on this pin
  */
+#include "WProgram.h"
+void setup();
+void loop();
+void transmitStatus(int message);
+void readSerial();
 int incomingByte = 0;
 int redLED = 9;                 // LED connected to digital pin 13
 int blueLED = 10;                 // LED connected to digital pin 13
@@ -42,7 +47,7 @@ void loop()
     
     
     
-   if (total2 > 100) {
+   /* if (total2 > 100) {
       Serial.print("D");
       //transmitStatus(1);
       if (heat < 1023) {
@@ -58,7 +63,7 @@ void loop()
       heat --;
       cold ++;
       }
-    }
+    } */
     
     analogWrite(blueLED, cold / 4);
     analogWrite(redLED, heat / 4);
@@ -98,3 +103,16 @@ void readSerial() {
   delay(10);
   }
 }
+
+int main(void)
+{
+	init();
+
+	setup();
+    
+	for (;;)
+		loop();
+        
+	return 0;
+}
+
