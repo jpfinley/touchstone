@@ -5,14 +5,14 @@ CapSense   cs_4_5 = CapSense(4,5);        // 10M resistor between pins 4 & 6, pi
 // Variable Setup
 int incomingByte = 0;
 int redLED = 9;                 // LED connected to digital pin 13
-int blueLED = 10;                 // LED connected to digital pin 13
+int blueLED = 10;               // LED connected to digital pin 13
 int heat = 0;
 int cold = 1023;
 
 void setup(){
   Serial.begin(9600);
   pinMode(redLED, OUTPUT);      // sets the digital pin as output
-  pinMode(blueLED, OUTPUT);      // sets the digital pin as output
+  pinMode(blueLED, OUTPUT);     // sets the digital pin as output
 }
 
 void loop(){
