@@ -45,8 +45,8 @@ void loop()
     
     
     
-   if (total2 > 100) {
-      Serial.println("D");
+  /* if (total2 > 100) {
+      Serial.write("D");
       //transmitStatus(1);
       if (heat < 1023) {
       heat ++;
@@ -60,7 +60,7 @@ void loop()
       heat --;
       cold ++;
       }
-    }
+    } */
     
     analogWrite(blueLED, cold / 4);
     analogWrite(redLED, heat / 4);
@@ -80,25 +80,24 @@ void loop()
 
 void readSerial() {
  //Read the serial buffer, light up the LED
- 
   if (Serial.available() > 0) {
-    Serial.print("Recieving: ");
-    Serial.println(Serial.read());
-    /* if (Serial.read() == 'D'){
+    if (Serial.read() == 'D'){
+      Serial.println("Hotter");
       //make things hotter
       if (heat < 1023) {
       heat ++;
       cold --;
       }
     }
-    else {
+    else if (Serial.read() == 'F'){
       //make things colder
       if (heat > 1) {
+      Serial.println("Colder");
       heat --;
       cold ++;
       }
-    } */
-  //Serial.flush();
+    }
+  Serial.flush();
   delay(10);
   }
 }
