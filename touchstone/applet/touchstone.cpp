@@ -36,9 +36,6 @@ void checkIfIAmTouched(){
   if (total2 > 100){
     Serial.write("D");
   }
-  else{
-    Serial.write("F");
-  }
 }
 
 void listenForOtherDevice(){
@@ -46,12 +43,12 @@ void listenForOtherDevice(){
   if (Serial.available() > 0){
     if (Serial.read() == 'D'){
       makeThingsHotter();
-    }
-    else if (Serial.read() == 'F'){
-      makeThingsColder();
     }    
     Serial.flush();
     delay(10);
+  }
+  else {
+    makeThingsColder();
   }
 }
 
