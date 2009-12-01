@@ -94,7 +94,7 @@ void readSerial() {
       cold ++;
       }
     } */
-  Serial.flush();
+  //Serial.flush();
   delay(10);
   }
 }
