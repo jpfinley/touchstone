@@ -27,10 +27,9 @@ void setup()
 
 void loop()                    
 {
-    long start = millis();
     long total2 =  cs_4_5.capSense(30);
 
-  /* Serial.print(heat);
+    Serial.print(heat);
     Serial.print(" ");
     Serial.print(cold);
     Serial.print("\t");                    // tab character for debug windown spacing
@@ -38,7 +37,7 @@ void loop()
     Serial.println(total2);                 // print sensor output 2*/
 
 
-   // delay(10);                             // arbitrary delay to limit data to serial port
+   delay(10);                             // arbitrary delay to limit data to serial port
     
     
     
