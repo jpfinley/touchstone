@@ -42,7 +42,7 @@ void loop()
     
     
     
-    if (total2 > 100) {
+   if (total2 > 100) {
       Serial.print("D");
       //transmitStatus(1);
       if (heat < 1023) {
@@ -78,22 +78,23 @@ void transmitStatus(int message) {
 
 void readSerial() {
  //Read the serial buffer, light up the LED
-  if(Serial.available() > 0) {
-    incomingByte = Serial.read();
-    Serial.println(incomingByte, DEC);
-
-    if(incomingByte == 49){ //49 is ASCII for the number one.
-      analogWrite(redLED, 1023);
-     /*if (heat < 1023) {
+ 
+  if (Serial.available() > 0) {
+    if (Serial.read() == 'D'){
+      //make things hotter
+      if (heat < 1023) {
       heat ++;
       cold --;
       }
     }
-    else{
+    else {
+      //make things colder
       if (heat > 1) {
       heat --;
       cold ++;
-      }*/
+      }
     }
+  Serial.flush();
+  delay(10);
   }
 }
