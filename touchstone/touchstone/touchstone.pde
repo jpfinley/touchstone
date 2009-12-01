@@ -29,12 +29,12 @@ void loop()
 {
     long total2 =  cs_4_5.capSense(30);
 
-    Serial.print(heat);
+   /*  Serial.print(heat);
     Serial.print(" ");
     Serial.print(cold);
     Serial.print("\t");                    // tab character for debug windown spacing
     Serial.print("\t");
-    Serial.println(total2);                 // print sensor output 2*/
+    Serial.println(total2);     */            // print sensor output 2*/
 
 
    delay(10);                             // arbitrary delay to limit data to serial port
@@ -42,7 +42,7 @@ void loop()
     
     
    if (total2 > 100) {
-      Serial.print("D");
+      Serial.println("D");
       //transmitStatus(1);
       if (heat < 1023) {
       heat ++;
@@ -50,7 +50,6 @@ void loop()
       }
     }
     else {
-      Serial.print("F");
       //transmitStatus(0);
       
       if (heat > 1) {
@@ -69,17 +68,19 @@ void loop()
 
 
 
-void transmitStatus(int message) {
+/* void transmitStatus(int message) {
   //Transmit the button's state
     Serial.print(message);
   
-}
+} */
 
 void readSerial() {
  //Read the serial buffer, light up the LED
  
   if (Serial.available() > 0) {
-    if (Serial.read() == 'D'){
+    Serial.print("Recieving: ");
+    Serial.println(Serial.read());
+    /* if (Serial.read() == 'D'){
       //make things hotter
       if (heat < 1023) {
       heat ++;
@@ -92,8 +93,8 @@ void readSerial() {
       heat --;
       cold ++;
       }
-    }
-  Serial.flush();
+    } */
+  //Serial.flush();
   delay(10);
   }
 }
