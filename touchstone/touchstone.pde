@@ -1,6 +1,7 @@
 // Capacitive Setup
+// 10M resistor between pins 4 & 6, pin 6 is sensor pin, add a wire and or foil
 #include <CapSense.h>
-CapSense   cs_4_5 = CapSense(4,5);        // 10M resistor between pins 4 & 6, pin 6 is sensor pin, add a wire and or foil
+CapSense   cs_4_5 = CapSense(4,5);
 
 // Variable Setup
 int incomingByte = 0;
