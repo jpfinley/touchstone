@@ -7,7 +7,7 @@ void loveConnection();
 void heartPulse();
 void writeLights();
 int i = 0;
-int rate = 10;
+int rate = 20;
 
 int remoteHot = 10;
 int remoteCool = 11;
@@ -69,25 +69,25 @@ void heartPulse(){
   analogWrite(remoteCool, 0);
   analogWrite(localCool, 0);
   
-  for (i = 255; i > 100; i--){
-   analogWrite(remoteHot,i);
-   analogWrite(localHot,i);
-   delay(((60000/rate)*.1)/255);
- }
-  
   for(i = 100; i < 255; i++) {
    analogWrite(remoteHot,i);
    analogWrite(localHot,i);
-   delay(((60000/rate)*.2)/255);
+   delay(((60000/rate)*.1)/255);
  }
  
  for (i = 255; i > 100; i--){
    analogWrite(remoteHot,i);
    analogWrite(localHot,i);
+   delay(((60000/rate)*.2)/255);
+ }
+ 
+ for(i = 100; i < 255; i++) {
+   analogWrite(remoteHot,i);
+   analogWrite(localHot,i);
    delay(((60000/rate)*.1)/255);
  }
  
-   for(i = 100; i < 255; i++) {
+ for (i = 255; i > 100; i--){
    analogWrite(remoteHot,i);
    analogWrite(localHot,i);
    delay(((60000/rate)*.6)/255);
@@ -98,9 +98,9 @@ void heartPulse(){
 
 void writeLights(){
  analogWrite(remoteHot, remoteVal);
- analogWrite(remoteCool, (fadeVal - remoteVal));
+ //analogWrite(remoteCool, (fadeVal - remoteVal));
  analogWrite(localHot, localVal);
- analogWrite(localCool, (fadeVal - localVal));
+ //analogWrite(localCool, (fadeVal - localVal));
 }
 
 int main(void)
