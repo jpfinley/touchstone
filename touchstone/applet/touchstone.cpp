@@ -33,7 +33,7 @@ void loop(){
 
 void checkIfIAmTouched(){
   long total2 = cs_4_5.capSense(30);
-  if (total2 > 100){
+  if (total2 > 50){
     Serial.write("D");
   }
 }
@@ -48,7 +48,8 @@ void listenForOtherDevice(){
     delay(10);
   }
   else {
-    makeThingsColder();
+   //Serial.println("Cooling!");
+   //makeThingsColder();
   }
 }
 
