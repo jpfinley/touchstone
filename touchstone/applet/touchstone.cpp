@@ -1,30 +1,33 @@
 // Capacitive Setup
+// 10M resistor between pins 4 & 6, pin 6 is sensor pin, add a wire and or foil
 #include <CapSense.h>
 #include "WProgram.h"
 void setup();
 void loop();
 void checkIfIAmTouched();
+void talkToOtherDevice();
 void listenForOtherDevice();
-void makeThingsColder();
 void makeThingsHotter();
+void makeThingsColder();
 void lightLEDs();
-CapSense   cs_4_5 = CapSense(4,5);        // 10M resistor between pins 4 & 6, pin 6 is sensor pin, add a wire and or foil
+CapSense cs_4_5 = CapSense(4,5);
 
 // Variable Setup
 int incomingByte = 0;
-int redLED = 9;                 // LED connected to digital pin 13
-int blueLED = 10;                 // LED connected to digital pin 13
-int heat = 0;
-int cold = 1023;
+int localLED = 9;                 // LED connected to digital pin 13
+int remoteLED = 10;               // LED connected to digital pin 13
+int localHeat = 0;
+int remoteHeat = 0;
 
 void setup(){
   Serial.begin(9600);
-  pinMode(redLED, OUTPUT);      // sets the digital pin as output
-  pinMode(blueLED, OUTPUT);      // sets the digital pin as output
+  pinMode(localLED, OUTPUT);      // sets the digital pin as output
+  pinMode(remoteLED, OUTPUT);     // sets the digital pin as output
 }
 
 void loop(){
   checkIfIAmTouched();
+  talkToOtherDevice();
   listenForOtherDevice();
   lightLEDs();
 }
@@ -33,43 +36,45 @@ void loop(){
 
 void checkIfIAmTouched(){
   long total2 = cs_4_5.capSense(30);
-  if (total2 > 50){
-    Serial.write("D");
+  if (total2 > 100){
+    makeThingsHotter();
   }
+  else{
+    makeThingsColder();
+  }
+  delay(10);
+}
+
+void talkToOtherDevice(){
+  Serial.write(localHeat);
 }
 
 void listenForOtherDevice(){
   //Read the serial buffer, light up the LED
   if (Serial.available() > 0){
-    if (Serial.read() == 'D'){
-      makeThingsHotter();
-    }    
+    remoteHeat = Serial.read();
     Serial.flush();
-    delay(10);
-  }
-  else {
-   //Serial.println("Cooling!");
-   //makeThingsColder();
-  }
-}
-
-void makeThingsColder(){
-  if (heat > 1){
-    heat --;
-    cold ++;
   }
 }
 
 void makeThingsHotter(){
-  if (heat < 1023) {
-    heat ++;
-    cold --;
+  if (localHeat < 255){
+    localHeat++;
+  }
+}
+
+void makeThingsColder(){
+  if (localHeat > 1){
+    localHeat--;
   }
 }
 
 void lightLEDs(){
-  analogWrite(blueLED, cold / 4);
-  analogWrite(redLED, heat / 4);
+  //if both heats are at 255
+  //heartbeat
+  //else 
+  analogWrite(localLED, localHeat);
+  analogWrite(remoteLED, remoteHeat);
 }
 
 
