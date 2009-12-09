@@ -1,7 +1,14 @@
-// Capacitive setup //
-#include <CapSense.h>
-// 10M resistor between pins 4 & 6
-// pin 6 is sensor pin, add a wire and or foil
+/* Touchstone by John P. Finley, Angela Huang, and Jeff Kirsch
+
+December 9th, 2009 for Presentation
+
+Portions based on Heartbeat LED by elCalvoMike 12-6-2008
+*/
+
+// Variable Setup
+#define localLED 9                 // Local LED attached to PWM 9
+#define remoteLED 10               // Remote LED attached to PWM 9
+
 #include "WProgram.h"
 void setup();
 void loop();
@@ -10,18 +17,18 @@ void talkToOtherDevice();
 void listenForOtherDevice();
 void makeThingsHotter();
 void makeThingsColder();
-void checkForPulse();
 void lightLEDs();
-CapSense cs_4_5 = CapSense(4,5);
-long touchThreshold = cs_4_5.capSense(30);
-  
-// Variable Setup
-int localLED = 9;                 // LED connected to digital pin 13
-int remoteLED = 10;               // LED connected to digital pin 13
-int localHeat = 0;                // the heat value for this arduino
-int remoteHeat = 0;               // the heat value for the other arduino
-int rate = 20;                    // Jeff's mystery timer
-boolean bothHandsAreTouching = false;
+void pulseMe();
+void heartPulse();
+int incomingByte = 0;
+int localHeat = 0;
+int remoteHeat = 0;
+
+int i = 0;
+int rate = 20;
+
+int analogPin = 0;
+int val = 0;         // variable to store the read value
 
 void setup(){
   Serial.begin(9600);
@@ -31,6 +38,7 @@ void setup(){
 
 void loop(){
   checkIfIAmTouched();
+  talkToOtherDevice();
   listenForOtherDevice();
   lightLEDs();
 }
@@ -38,9 +46,8 @@ void loop(){
 //**************************************************//
 
 void checkIfIAmTouched(){
-  if(touchThreshold > 100){
+  if (analogRead(analogPin) > 0 ){
     makeThingsHotter();
-    talkToOtherDevice();
   }
   else{
     makeThingsColder();
@@ -49,77 +56,70 @@ void checkIfIAmTouched(){
 }
 
 void talkToOtherDevice(){
-  Serial.write('t');
+  Serial.write(localHeat);
 }
 
 void listenForOtherDevice(){
+  //Read the serial buffer, light up the LED
   if (Serial.available() > 0){
-    if(Serial.read() == 't'){
-      if(remoteHeat < 255){
-        remoteHeat++;
-      }
-    }
-  }
-  else{
-    if(remoteHeat > 0){
-      remoteHeat--;
-    }
+    remoteHeat = Serial.read();
+    Serial.flush();
   }
 }
 
 void makeThingsHotter(){
-  if(localHeat < 255){
+  if (localHeat < 255){
     localHeat++;
   }
 }
 
 void makeThingsColder(){
-  if(localHeat > 0){
+  if (localHeat > 0){
     localHeat--;
   }
 }
 
-void checkForPulse(){
-//  if (localHeat > 245 && remoteHeat > 245){
-//    bothHandsAreTouching = true;
-//  }
-//  else {
-//    bothHandsAreTouching = false;
-//  }
+void lightLEDs(){
+  if(localHeat == 255 && remoteHeat == 255){
+    heartPulse();
+  }
+  else{
+    analogWrite(localLED, localHeat);
+    analogWrite(remoteLED, remoteHeat);
+  }
 }
 
-void lightLEDs(){
+void pulseMe(){
   analogWrite(localLED, localHeat);
   analogWrite(remoteLED, remoteHeat);
+  delay(30);
+  analogWrite(localLED, 100);
+  analogWrite(remoteLED, 100);
+  delay(50);
 }
 
-//void heartPulse(){
-//  for(int i = 100; i < 255; i++) {
-//    analogWrite(remoteLED,i);
-//    analogWrite(localLED,i);
-//    delay(((60000/rate)*.1)/255);
-//  } 
-//  for(int i = 255; i > 100; i--){
-//    analogWrite(remoteLED,i);
-//    analogWrite(localLED,i);
-//    delay(((60000/rate)*.2)/255);
-//  }
-//  for(int i = 100; i < 255; i++) {
-//    analogWrite(remoteLED,i);
-//    analogWrite(localLED,i);
-//    delay(((60000/rate)*.1)/255);
-//  } 
-//  for(int i = 255; i > 100; i--){
-//    analogWrite(remoteLED,i);
-//    analogWrite(localLED,i);
-//    delay(((60000/rate)*.6)/255);
-//  }
-//}
-
-
-
-
-
+void heartPulse(){
+ for (i = 255; i > 100; i--){
+   analogWrite(remoteLED,i);
+   analogWrite(localLED,i);
+   delay(((60000/rate)*.1)/255);
+ }
+ for(i = 100; i < 255; i++) {
+   analogWrite(remoteLED,i);
+   analogWrite(localLED,i);
+   delay(((60000/rate)*.2)/255);
+ } 
+ for (i = 255; i > 100; i--){
+   analogWrite(remoteLED,i);
+   analogWrite(localLED,i);
+   delay(((60000/rate)*.1)/255);
+ }
+ for(i = 100; i < 255; i++) {
+   analogWrite(remoteLED,i);
+   analogWrite(localLED,i);
+   delay(((60000/rate)*.6)/255);
+ }
+}
 
 
 int main(void)
